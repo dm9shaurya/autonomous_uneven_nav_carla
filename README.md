@@ -1,62 +1,76 @@
 # Autonomous Mapless Navigation in Unstructured Terrain
 
-This repository contains experimental controller implementations for autonomous mapless navigation in uneven off-road terrain using the CARLA simulator.
+Experimental terrain-aware autonomous navigation framework for off-road traversal in CARLA using VSGP perception, custom Topology-Inspired Corridor Navigation (TCN), MPPI trajectory optimization, semantic terrain reasoning, IMU stability analysis, and persistent terrain memory.
 
-The project focuses on terrain-aware navigation without relying on predefined maps, lane structures, or classical global path planners. It explores iterative controller designs for obstacle avoidance, traversability reasoning, trajectory selection, and recovery behavior in highly irregular environments.
+This repository focuses on mapless autonomous navigation in highly irregular terrain without relying on:
+- predefined HD maps
+- lane graphs
+- waypoint routes
+- classical graph-search planners such as A*, RRT, or PRM
 
-Unlike standard navigation stacks that depend on planners such as A*, RRT, or similar graph-search methods, the `tcn`-based files in this repository implement a custom-built planner architecture designed specifically for terrain-aware mapless navigation.
+The system was developed through iterative experimentation and controller evolution during research into autonomous off-road navigation in unstructured terrain.
 
-The controller evolution and research background are described primarily in Chapters 5, 6, and 7 of the accompanying report.
+---
 
-## Project Status
+# Project Status
 
-This repository contains research-oriented and experimental controller code.
+This repository contains research-oriented experimental code.
 
-The current implementations are **not final** and still require:
-- further refinement
-- parameter tuning
-- stability improvements
-- recovery behavior improvements
-- broader validation across terrain types
+The current implementations are **not final production-ready systems** and still require:
+- additional tuning
+- stability refinement
+- broader terrain validation
+- recovery optimization
+- planner refinement
+- controller modularization
 
-This project is intended for experimentation, development, and research in autonomous off-road navigation.
+The project is intended primarily for:
+- research
+- experimentation
+- controller prototyping
+- terrain-aware navigation studies
+- autonomous off-road simulation
 
-## Key Features
+---
 
-- Mapless autonomous navigation in unstructured terrain
-- Terrain-aware control logic for uneven off-road environments
-- Custom TCN-based planner implementations
-- Reactive LiDAR-based navigation
-- VSGP-based traversability reasoning
-- Recovery-aware navigation behavior
-- Multi-vehicle formation navigation experiments
-- Iterative controller development and comparison
+# Core Navigation Architecture
 
-## Controller Progression
-
-The repository reflects multiple stages of controller development:
-
-1. **Reactive LiDAR baseline**  
-   A local clearance-based navigation approach for initial motion and obstacle avoidance.
-
-2. **VSGP-based mapless navigation**  
-   Terrain estimation is handled through probabilistic modeling to improve traversability reasoning.
-
-3. **Custom TCN-based planning**  
-   The `tcn` files contain a custom-built planner rather than a standard native A* / RRT / PRM pipeline.
-
-4. **Recovery-enhanced navigation**  
-   Additional logic was added to help the vehicle escape stuck or unstable states.
-
-5. **Formation navigation experiments**  
-   Multi-vehicle coordination and formation-oriented traversal were explored as part of later iterations.
-
-## Repository Structure
+The current primary implementation:
 
 ```text
-legacy/                          Older versions kept for reference
-tcn planner/                     Custom TCN-based planner experiments
 main_vsgp_tcn_single_vehicle_stable_main.py
-main_multiple_vehicle_formation_vsgp_tcn.py
-LICENSE
-.gitignore
+
+System Pipeline :
+
+LiDAR ──────────────┬──► VSGP Perception ──────────► Traversability Grid
+                    │         │
+                    │         └──► Slope / Roughness / Void-risk Maps
+                    │
+                    └──► ElevationGridBuilder ──► TCN Planner
+                              │                      │
+                    RGB ──────┤                      ▼
+                              │             Corridor Graph Navigation
+                    Semantic ─┤
+                              │
+                    IMU ──────┴──► Stability Analysis
+
+                                ▼
+
+                    Fused Traversability Estimation
+                                │
+                                ▼
+
+                      SlipAware-MPPI Controller
+                                │
+               ┌────────────────┼────────────────┐
+               ▼                ▼                ▼
+        Reactive Safety    Anti-Tip Layer   Recovery Logic
+                                │
+                                ▼
+                       Control Arbitration
+                                │
+                                ▼
+                         Vehicle Control
+                                │
+                                ▼
+                              CARLA
