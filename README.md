@@ -74,3 +74,52 @@ LiDAR ──────────────┬──► VSGP Perception ─
                                 │
                                 ▼
                               CARLA
+
+# Runtime System Visualization
+
+![Runtime UI](results/runtime_ui.png)
+
+The runtime interface visualizes:
+- terrain-aware corridor planning
+- safe/unsafe topology nodes
+- MPPI optimization behavior
+- vehicle telemetry
+- navigation state estimation
+
+---
+
+# Navigation Results
+
+## Terrain-Aware Trajectory
+
+![Trajectory](results/trajectory.svg)
+
+---
+
+## Terrain Flatness Estimation
+
+![Flatness Heatmap](results/flatness_heatmap.svg)
+
+---
+
+## MPPI Optimization Cost
+
+![MPPI Cost](results/mppi_cost.svg)
+
+---
+
+## Goal Convergence
+
+![Goal Distance](results/goal_distance.svg)
+
+---
+
+## Terrain-Aware Speed Adaptation
+
+![Vehicle Speed](results/vehicle_speed.svg)
+
+---
+
+## Traversability Speed Heatmap
+
+![Speed Heatmap](results/speed_heatmap.svg)
